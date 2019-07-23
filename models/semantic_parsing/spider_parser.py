@@ -794,18 +794,19 @@ class SpiderParser(Model):
 
                 sequence_in_targets = self._action_history_match(best_action_indices, targets)
                 self._exact_match(sequence_in_targets)
+                
+                if original_gold_sql_query:
+                    sql_evaluator_match = self._evaluate_func(original_gold_sql_query, predicted_sql_query, world[i].db_id)
+                    self._sql_evaluator_match(sql_evaluator_match)
 
-                sql_evaluator_match = self._evaluate_func(original_gold_sql_query, predicted_sql_query, world[i].db_id)
-                self._sql_evaluator_match(sql_evaluator_match)
+                    similarity = difflib.SequenceMatcher(None, best_action_indices, targets)
+                    self._action_similarity(similarity.ratio())
 
-                similarity = difflib.SequenceMatcher(None, best_action_indices, targets)
-                self._action_similarity(similarity.ratio())
-
-                difficulty = self._query_difficulty(targets, action_mapping, i)
-                if difficulty:
-                    self._acc_multi(sql_evaluator_match)
-                else:
-                    self._acc_single(sql_evaluator_match)
+                    difficulty = self._query_difficulty(targets, action_mapping, i)
+                    if difficulty:
+                        self._acc_multi(sql_evaluator_match)
+                    else:
+                        self._acc_single(sql_evaluator_match)
 
             beam_hit = False
             for pos, final_state in enumerate(best_final_states[i]):
@@ -815,7 +816,7 @@ class SpiderParser(Model):
                 candidate_sql_query = action_sequence_to_sql(action_strings, add_table_names=True)
 
                 if target_list is not None:
-                    correct = self._evaluate_func(original_gold_sql_query, candidate_sql_query, world[i].db_id)
+                    correct = original_gold_sql_query and self._evaluate_func(original_gold_sql_query, candidate_sql_query, world[i].db_id)
                     if correct:
                         beam_hit = True
                     self._beam_hit(beam_hit)
