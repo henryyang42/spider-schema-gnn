@@ -4,11 +4,12 @@ Author implementation of this [ACL 2019 paper](https://arxiv.org/abs/1905.06241)
 
 ## Install & Configure
 
-1. Install pytorch version 1.0.1.post2 that fits your CUDA version 
+1. Install pytorch version 1.1.0 that fits your CUDA version 
    
    (this repository should probably work with the latest pytorch version, but wasn't tested for it. If you use another version, you'll need to also update the versions of packages in `requirements.txt`)
     ```
-    pip install https://download.pytorch.org/whl/cu100/torch-1.0.1.post2-cp37-cp37m-linux_x86_64.whl # CUDA 10.0 build
+    pip3 install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-linux_x86_64.whl
+    pip3 install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp37-cp37m-linux_x86_64.whl
     ```
     
 2. Install the rest of required packages
